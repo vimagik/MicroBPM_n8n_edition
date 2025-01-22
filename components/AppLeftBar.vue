@@ -1,5 +1,25 @@
+<i18n lang="yaml">
+en:
+  myTasks: 'My tasks'
+  processes: 'Processes'
+  directories: 'Directories'
+  settings: 'Settings'
+  about: 'About'
+  links: 'Links'
+ru:
+  myTasks: 'Мои задачи'
+  processes: 'Процессы'
+  directories: 'Справочники'
+  settings: 'Настройки'
+  about: 'О проекте'
+  links: 'Ссылки'
+</i18n>
+
 <script setup>
 const store = useAppStore()
+const { t } = useI18n({
+    useScope: 'local'
+})
 </script>
 
 <template>
@@ -13,10 +33,10 @@ const store = useAppStore()
                         <q-icon name="library_add_check" />
                     </q-item-section>
                     <q-item-section>
-                        Мои задачи
+                        {{ t('myTasks') }}
                     </q-item-section>
                 </q-item>
-                <q-expansion-item expand-separator icon="cable" label="Процессы">
+                <q-expansion-item expand-separator icon="cable" :label="t('processes')">
                     <q-list dark dense>
                         <q-item clickable v-ripple>
                             <q-item-section>
@@ -35,21 +55,21 @@ const store = useAppStore()
                         <q-icon name="description" />
                     </q-item-section>
                     <q-item-section>
-                        Справочники
+                        {{ t('directories') }}
                     </q-item-section>
                 </q-item>
             </q-list>
             <q-separator class="q-mx-md" color="grey-9" />
-            <p class="text-subtitle1 text-grey-6 q-ml-md q-mt-md">Ссылки</p>
+            <p class="text-subtitle1 text-grey-6 q-ml-md q-mt-md">{{ t('links') }}</p>
             <q-list dark dense>
                 <q-item clickable v-ripple>
                     <q-item-section>
-                        Настройки
+                        {{ t('settings') }}
                     </q-item-section>
                 </q-item>
                 <q-item clickable v-ripple>
                     <q-item-section>
-                        О проекте
+                        {{ t('about') }}
                     </q-item-section>
                 </q-item>
             </q-list>
