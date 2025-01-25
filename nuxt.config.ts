@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['nuxt-quasar-ui', '@pinia/nuxt', '@nuxtjs/i18n', '@nuxtjs/i18n'],
   experimental: { appManifest: false },
+  i18n: {
+   defaultLocale: 'ru', // default locale of your project for Nuxt pages and routings
+  }
 })
 
 // modules: ['nuxt-directus', 'nuxt-quasar-ui', '@pinia/nuxt'],
