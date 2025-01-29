@@ -2,10 +2,35 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  modules: ['nuxt-quasar-ui', '@pinia/nuxt', '@nuxtjs/i18n', '@nuxtjs/i18n'],
+  modules: ['nuxt-directus', 'nuxt-quasar-ui', '@pinia/nuxt', '@nuxtjs/i18n', '@nuxtjs/i18n'],
   experimental: { appManifest: false },
   i18n: {
-   defaultLocale: 'ru', // default locale of your project for Nuxt pages and routings
+    strategy: 'no_prefix',
+    defaultLocale: 'ru', // default locale of your project for Nuxt pages and routings
+  },
+  runtimeConfig: {
+    public: {
+      directus: {
+        url: "http://localhost:8055"
+      }
+    }
+  },
+  quasar: {
+    config: {
+      brand: {
+        primary: '#26c6da',
+        secondary: '#26A69A',
+        accent: '#9C27B0',
+
+        dark: '#1d1d1d',
+        'dark-page': '#121212',
+
+        positive: '#21BA45',
+        negative: '#C10015',
+        info: '#31CCEC',
+        warning: '#F2C037'
+      }
+    }
   }
 })
 

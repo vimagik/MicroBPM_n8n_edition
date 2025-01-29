@@ -27,6 +27,14 @@ function switchLocale() {
         setLocale('ru')
     }
 }
+
+const { logout } = useDirectusAuth()
+const router = useRouter()
+
+async function onLogout() {
+    await logout()
+    router.push('/login')
+}
 </script>
 
 <template>
@@ -43,7 +51,7 @@ function switchLocale() {
                             <q-item-section>{{ localeNameToBeSwitched }}</q-item-section>
                         </q-item>
                         <q-separator />
-                        <q-item clickable v-close-popup>
+                        <q-item clickable v-close-popup @click="onLogout">
                             <q-item-section>{{ t('exit') }}</q-item-section>
                         </q-item>
                     </q-list>
