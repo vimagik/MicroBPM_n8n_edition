@@ -8,9 +8,15 @@ ru:
 </i18n>
 
 <script setup>
-const { t } = useI18n({
+const { t, locale } = useI18n({
     useScope: 'local'
 })
+
+const { data: tasks, refresh } = useGetItems('task', {
+    limit: 2,
+    page: 1
+})
+const { formatData } = useFormatData()
 </script>
 
 
@@ -35,15 +41,17 @@ const { t } = useI18n({
                     </q-card-section>
                     <q-card-section class="q-pt-none">
                         <q-list>
-                            <q-item clickable v-ripple class="q-mb-sm bg-white" active-class="cyan-5">
+                            <q-item v-for="task in tasks" :key="task.id" clickable v-ripple class="q-mb-sm bg-white"
+                                active-class="cyan-5">
                                 <q-item-section>
                                     <div class="q-my-sm q-ml-sm">
-                                        <div class="text-body1">Сделай раз</div>
-                                        <div class="text-caption">Процесс абв</div>
+                                        <div class="text-body1">{{ locale === 'en-US' ? task.name_en : task.name }}
+                                        </div>
+                                        <div class="text-caption">{{ task.process }}</div>
                                     </div>
                                 </q-item-section>
-                                <q-item-section class="a-ml-sm" side>
-                                    <q-btn outline rounded color="red" label="01/08/1984" />
+                                <q-item-section v-if="task.due_date" class="a-ml-sm" side>
+                                    <q-btn outline rounded color="red" :label="formatData(task.due_date)" />
                                 </q-item-section>
                             </q-item>
                         </q-list>
