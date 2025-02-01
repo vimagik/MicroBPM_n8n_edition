@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   experimental: { appManifest: false },
   i18n: {
     strategy: 'no_prefix',
-    defaultLocale: 'ru', // default locale of your project for Nuxt pages and routings
+    defaultLocale: 'ru', 
   },
   runtimeConfig: {
     public: {
@@ -33,5 +33,3 @@ export default defineNuxtConfig({
     }
   }
 })
-
-// modules: ['nuxt-directus', 'nuxt-quasar-ui', '@pinia/nuxt'],

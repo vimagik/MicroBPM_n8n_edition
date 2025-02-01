@@ -12,11 +12,22 @@ const { t, locale } = useI18n({
     useScope: 'local'
 })
 
-const { data: tasks, refresh } = useGetItems('task', {
-    limit: 2,
-    page: 1
-})
 const { formatData } = useFormatData()
+
+const current = reactive({
+    limit: 2,
+    page: 1,
+    meta: 'filter_count',
+    filter: {
+        name: {
+            _istarts_with: 'д'
+        }
+    }
+})
+
+const { data: tasks } = await useGetItems('task', current, {
+    watch: [current]
+})
 </script>
 
 
@@ -32,7 +43,7 @@ const { formatData } = useFormatData()
                     </div>
                     <q-space />
                     <div class="col-4">
-                        <q-input rounded standout label="Поиск" />
+                        <q-input v-model="current.filter" rounded standout label="Поиск" />
                     </div>
                 </div>
                 <q-card class="bg-grey-4 q-mt-md">
@@ -41,8 +52,8 @@ const { formatData } = useFormatData()
                     </q-card-section>
                     <q-card-section class="q-pt-none">
                         <q-list>
-                            <q-item v-for="task in tasks" :key="task.id" clickable v-ripple class="q-mb-sm bg-white"
-                                active-class="cyan-5">
+                            <q-item v-for="task in tasks.data" :key="task.id" clickable v-ripple
+                                class="q-mb-sm bg-white" active-class="cyan-5">
                                 <q-item-section>
                                     <div class="q-my-sm q-ml-sm">
                                         <div class="text-body1">{{ locale === 'en-US' ? task.name_en : task.name }}
@@ -55,6 +66,12 @@ const { formatData } = useFormatData()
                                 </q-item-section>
                             </q-item>
                         </q-list>
+                    </q-card-section>
+                    <q-card-section>
+                        <div class="flex flex-center">
+                            <q-pagination v-model="current.page" direction-links
+                                :max="tasks.meta.filter_count / 2 + 1" />
+                        </div>
                     </q-card-section>
                 </q-card>
             </div>
