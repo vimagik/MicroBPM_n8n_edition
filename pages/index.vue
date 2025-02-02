@@ -18,11 +18,6 @@ const current = reactive({
     limit: 2,
     page: 1,
     meta: 'filter_count',
-    filter: {
-        name: {
-            _istarts_with: 'д'
-        }
-    }
 })
 
 const { data: tasks } = await useGetItems('task', current, {
