@@ -14,15 +14,22 @@ const { t, locale } = useI18n({
 
 const { formatData } = useFormatData()
 
-const current = reactive({
+
+const filterStr = ref('')
+const curPage = ref(2)
+
+const params = reactive({
     limit: 2,
     page: 1,
     meta: 'filter_count',
+    filter: {
+        name: {
+            _istarts_with: 'делай'
+        }
+    }
 })
 
-const { data: tasks } = await useGetItems('task', current, {
-    watch: [current]
-})
+const { data: tasksData, refresh } = await useGetItems('task', params)
 </script>
 
 
@@ -38,34 +45,15 @@ const { data: tasks } = await useGetItems('task', current, {
                     </div>
                     <q-space />
                     <div class="col-4">
-                        <q-input v-model="current.filter" rounded standout label="Поиск" />
+                        <q-input v-model="filterStr" rounded standout label="Поиск" />
                     </div>
                 </div>
                 <q-card class="bg-grey-4 q-mt-md">
-                    <q-card-section>
-                        <div class="text-h6">{{ t('activeTasks') }}</div>
-                    </q-card-section>
-                    <q-card-section class="q-pt-none">
-                        <q-list>
-                            <q-item v-for="task in tasks.data" :key="task.id" clickable v-ripple
-                                class="q-mb-sm bg-white" active-class="cyan-5">
-                                <q-item-section>
-                                    <div class="q-my-sm q-ml-sm">
-                                        <div class="text-body1">{{ locale === 'en-US' ? task.name_en : task.name }}
-                                        </div>
-                                        <div class="text-caption">{{ task.process }}</div>
-                                    </div>
-                                </q-item-section>
-                                <q-item-section v-if="task.due_date" class="a-ml-sm" side>
-                                    <q-btn outline rounded color="red" :label="formatData(task.due_date)" />
-                                </q-item-section>
-                            </q-item>
-                        </q-list>
-                    </q-card-section>
-                    <q-card-section>
+                    {{ tasksData }}
+                    <q-card-section v-if="tasksData">
                         <div class="flex flex-center">
-                            <q-pagination v-model="current.page" direction-links
-                                :max="tasks.meta.filter_count / 2 + 1" />
+                            <q-pagination v-model="params.page" @update:model-value="refresh" direction-links
+                                :max="tasksData.meta.filter_count / 2 + 1" />
                         </div>
                     </q-card-section>
                 </q-card>
