@@ -29,7 +29,6 @@ const params = reactive({
     }
 })
 
-const { data: tasksData, refresh } = await useGetItems('task', params)
 </script>
 
 

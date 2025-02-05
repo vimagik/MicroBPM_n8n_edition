@@ -24,20 +24,17 @@ const loadingStatus = ref(false)
 const errorLogin = ref(false)
 const errorMessage = ref('')
 
-const { login } = useDirectusAuth();
+const store = useAppStore()
 const router = useRouter();
 
 function onSubmit() {
     errorLogin.value = false
     loadingStatus.value = true
-    login({ email: email.value, password: password.value }).then(() => {
+    store.login(email.value, password.value).then(() => {
         loadingStatus.value = false
         router.push('/')
-    }).catch(() => {
-        loadingStatus.value = false
-        errorMessage.value = t('errorMessage')
-        errorLogin.value = true
     })
+    loadingStatus.value = false
 }
 
 const rules = [val => val && val.length > 0 || t('reqField')]

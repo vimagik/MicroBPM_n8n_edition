@@ -28,11 +28,9 @@ function switchLocale() {
     }
 }
 
-const { logout } = useDirectusAuth()
 const router = useRouter()
 
 async function onLogout() {
-    await logout()
     router.push('/login')
 }
 </script>

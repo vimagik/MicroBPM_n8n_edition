@@ -12,22 +12,23 @@ export const useAppStore = defineStore('app', () => {
     const expires = ref(0)
 
     const runtimeConfig = useRuntimeConfig()
-
     async function login(email, password) {
+        
         const url = runtimeConfig.public.directus.url
-        const { data, status } = await useFetch(`${url}/auth/login`, {
+        await $fetch(`${url}/auth/login`, {
             method: 'POST',
             body: {
                 "email": email,
                 "password": password
             }
+        }).then((response) => {
+            console.log(response)
+            accessToken.value = response.data.access_token
+            refreshToken.value = response.data.refresh_token 
+            expires.value = response.data.expires
         })
-        if (status === 'success') {
-            accessToken.value = data.value.access_token
-            refreshToken.value = data.value.refresh_token 
-            expires.value = data.value.expires
-        }
+        
     }
 
-    return { leftDrawerOpen, openCloseBar, login }
+    return { leftDrawerOpen, openCloseBar, login, accessToken, refreshToken, expires}
 })
