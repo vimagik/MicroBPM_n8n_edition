@@ -31,6 +31,7 @@ function switchLocale() {
 const router = useRouter()
 
 async function onLogout() {
+    store.logout()
     router.push('/login')
 }
 </script>

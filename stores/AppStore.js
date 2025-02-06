@@ -22,7 +22,6 @@ export const useAppStore = defineStore('app', () => {
                 "password": password
             }
         }).then((response) => {
-            console.log(response)
             accessToken.value = response.data.access_token
             refreshToken.value = response.data.refresh_token 
             expires.value = response.data.expires
@@ -30,5 +29,11 @@ export const useAppStore = defineStore('app', () => {
         
     }
 
-    return { leftDrawerOpen, openCloseBar, login, accessToken, refreshToken, expires}
+    function logout() {
+        accessToken.value = ''
+        refreshToken.value = ''
+        expires.value = 0
+    }
+
+    return { leftDrawerOpen, openCloseBar, login, logout,  accessToken, refreshToken, expires}
 })

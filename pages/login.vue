@@ -33,8 +33,12 @@ function onSubmit() {
     store.login(email.value, password.value).then(() => {
         loadingStatus.value = false
         router.push('/')
+    }).catch(() => {
+        errorMessage.value = t('errorMessage')
+        errorLogin.value = true
+    }).finally(() => {
+        loadingStatus.value = false
     })
-    loadingStatus.value = false
 }
 
 const rules = [val => val && val.length > 0 || t('reqField')]
