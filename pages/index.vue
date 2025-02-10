@@ -8,7 +8,7 @@ ru:
 </i18n>
 
 <script setup>
-const { t, locale } = useI18n({
+const { t } = useI18n({
     useScope: 'local'
 })
 
@@ -16,19 +16,19 @@ const { formatData } = useFormatData()
 
 
 const filterStr = ref('')
-const curPage = ref(2)
+const curPage = ref(1)
 
-const params = reactive({
-    limit: 2,
-    page: 1,
-    meta: 'filter_count',
-    filter: {
-        name: {
-            _istarts_with: 'делай'
+const { data: tasksData, refresh } = await useProtectedFetch('/items/task',
+    {
+        method: 'SEARCH',
+        query: {
+            page: curPage,
+            limit: 2,
+            meta: 'filter_count',
+            search: filterStr
         }
     }
-})
-
+)
 </script>
 
 
@@ -44,14 +44,14 @@ const params = reactive({
                     </div>
                     <q-space />
                     <div class="col-4">
-                        <q-input v-model="filterStr" rounded standout label="Поиск" />
+                        <q-input v-model="filterStr" @update:model-value="refresh" rounded standout label="Поиск" />
                     </div>
                 </div>
                 <q-card class="bg-grey-4 q-mt-md">
                     {{ tasksData }}
                     <q-card-section v-if="tasksData">
                         <div class="flex flex-center">
-                            <q-pagination v-model="params.page" @update:model-value="refresh" direction-links
+                            <q-pagination v-model="curPage" @update:model-value="refresh" direction-links
                                 :max="tasksData.meta.filter_count / 2 + 1" />
                         </div>
                     </q-card-section>

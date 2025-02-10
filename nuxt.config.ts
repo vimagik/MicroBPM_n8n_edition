@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   experimental: { appManifest: false },
   i18n: {
     strategy: 'no_prefix',
-    defaultLocale: 'ru', 
+    defaultLocale: 'ru'
   },
   runtimeConfig: {
     public: {

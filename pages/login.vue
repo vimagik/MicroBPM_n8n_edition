@@ -33,7 +33,8 @@ function onSubmit() {
     store.login(email.value, password.value).then(() => {
         loadingStatus.value = false
         router.push('/')
-    }).catch(() => {
+    }).catch((error) => {
+        console.log(error)
         errorMessage.value = t('errorMessage')
         errorLogin.value = true
     }).finally(() => {
