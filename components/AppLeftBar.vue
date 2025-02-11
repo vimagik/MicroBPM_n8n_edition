@@ -17,9 +17,11 @@ ru:
 
 <script setup>
 const store = useAppStore()
-const { t } = useI18n({
+const { t, locale } = useI18n({
     useScope: 'local'
 })
+
+const {data: processData} = await useProtectedFetch('/items/process')
 </script>
 
 <template>
@@ -38,14 +40,9 @@ const { t } = useI18n({
                 </q-item>
                 <q-expansion-item expand-separator icon="cable" :label="t('processes')">
                     <q-list dark dense>
-                        <q-item clickable v-ripple>
+                        <q-item v-for="process in processData.data" :key="process.id" clickable v-ripple>
                             <q-item-section>
-                                Непрерывный менеджмент
-                            </q-item-section>
-                        </q-item>
-                        <q-item clickable v-ripple>
-                            <q-item-section>
-                                Встреча
+                                {{ locale == 'en-US' ? process.name_en : process.name }}
                             </q-item-section>
                         </q-item>
                     </q-list>
