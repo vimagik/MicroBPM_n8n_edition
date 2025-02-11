@@ -54,4 +54,8 @@ export const useAppStore = defineStore('app', () => {
     }
 
     return { leftDrawerOpen, openCloseBar, login, logout,  accessToken, refreshToken, expires, refresh}
-})
+},
+    {
+        persist: true,
+    },
+)
