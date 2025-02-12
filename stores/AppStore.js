@@ -35,13 +35,17 @@ export const useAppStore = defineStore('app', () => {
 
         await $fetch(`${url}/auth/refresh`, {
             method: 'POST',
+            headers: {
+                Authorization: `Bearer ${accessToken.value}`,
+            },
             body: {
                 "refresh_token": refreshToken.value,
                 "mode": 'json'
             }
         }).then((response) => {
-            accessToken.value = response.data.access_token 
-            let expiresDate = Date.now()
+            accessToken.value = response.data.access_token
+            refreshToken.value = response.data.refresh_token
+            let expiresDate = new Date()
             expires.value = expiresDate.setTime(expiresDate.getTime() + response.data.expires)
         })
         

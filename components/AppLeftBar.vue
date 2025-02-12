@@ -21,7 +21,7 @@ const { t, locale } = useI18n({
     useScope: 'local'
 })
 
-const {data: processData} = await useProtectedFetch('/items/process')
+const { data: processData } = await useProtectedFetch('/items/process')
 </script>
 
 <template>
@@ -40,7 +40,8 @@ const {data: processData} = await useProtectedFetch('/items/process')
                 </q-item>
                 <q-expansion-item expand-separator icon="cable" :label="t('processes')">
                     <q-list dark dense>
-                        <q-item v-for="process in processData.data" :key="process.id" clickable v-ripple>
+                        <q-item v-for="process in processData.data" :key="process.id" clickable :to="process.url"
+                            v-ripple>
                             <q-item-section>
                                 {{ locale == 'en-US' ? process.name_en : process.name }}
                             </q-item-section>
