@@ -30,7 +30,7 @@ const { data: processData } = await useProtectedFetch('/items/process')
             <q-img src="/images/logo.webp"></q-img>
             <q-separator class="q-mx-md" color="grey-9" />
             <q-list dark>
-                <q-item clickable v-ripple>
+                <q-item clickable v-ripple to="/">
                     <q-item-section avatar>
                         <q-icon name="library_add_check" />
                     </q-item-section>
