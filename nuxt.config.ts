@@ -13,6 +13,10 @@ export default defineNuxtConfig({
     public: {
       directus: {
         url: "http://localhost:8055"
+      },
+      n8n: {
+        jwt: "0fc0879bc76e3c98bf37d15516b21ea09cc8f4492f5f1732087c395ed6154333",
+        url: "http://localhost:5678/webhook-test"
       }
     }
   },

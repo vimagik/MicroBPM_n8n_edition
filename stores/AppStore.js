@@ -26,7 +26,7 @@ export const useAppStore = defineStore('app', () => {
             accessToken.value = response.data.access_token
             refreshToken.value = response.data.refresh_token
             let expiresDate = new Date()
-            expires.value = expiresDate.setTime(expiresDate.getTime() + response.data.expires - 1000)
+            expires.value = expiresDate.setTime(expiresDate.getTime() + response.data.expires - 5000)
         })
         
     }
@@ -46,7 +46,7 @@ export const useAppStore = defineStore('app', () => {
             accessToken.value = response.data.access_token
             refreshToken.value = response.data.refresh_token
             let expiresDate = new Date()
-            expires.value = expiresDate.setTime(expiresDate.getTime() + response.data.expires - 1000)
+            expires.value = expiresDate.setTime(expiresDate.getTime() + response.data.expires - 5000)
         })
         
     }
