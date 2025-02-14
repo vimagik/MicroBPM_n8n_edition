@@ -23,7 +23,7 @@ const { data: tasksData, refresh } = await useProtectedFetch('/items/task',
         method: 'SEARCH',
         query: {
             page: curPage,
-            limit: 2,
+            limit: 4,
             meta: 'filter_count',
             search: filterStr,
             fields: '*,process.*'
@@ -73,7 +73,7 @@ const { data: tasksData, refresh } = await useProtectedFetch('/items/task',
                     <q-card-section v-if="tasksData">
                         <div class="flex flex-center">
                             <q-pagination v-model="curPage" @update:model-value="refresh" direction-links
-                                :max="tasksData.meta.filter_count / 2 + 1" />
+                                :max="tasksData.meta.filter_count / 4 + 1" />
                         </div>
                     </q-card-section>
                 </q-card>

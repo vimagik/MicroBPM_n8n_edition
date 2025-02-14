@@ -42,6 +42,21 @@ function onReset() {
     formData.desc = ''
     alert.value = false
 }
+
+const store = useAppStore()
+
+async function onSubmit() {
+    await useProtectedFetchN8N('/46b0b3a0-c468-42f8-895c-48f273269491', {
+        method: 'POST',
+        body: {
+            jwt: store.accessToken,
+            process: "50558a56-e136-4b47-a187-97241ade0546",
+            ...formData
+        }
+    }).then(response => {
+        console.log(response)
+    })
+} 
 </script>
 
 <template>
