@@ -72,8 +72,7 @@ const createTask = ref(false)
       <span class="text-h5">{{ t('pageName') }}</span>
       <q-btn class="q-ml-sm q-mb-sm" @click="createTask = true" round color="grey-4" icon="add" text-color="black" />
     </div>
-    <q-table card-class="bg-grey-3" class="q-mt-md" v-if="cmData" :rows="cmData.data" :columns="columns"
-      row-key="name" />
-    <cm-create-task-dialog v-model="createTask" />
+    <q-table card-class="bg-grey-3" class="q-mt-md" :rows="cmData.data" :columns="columns" />
+    <cm-create-task-dialog v-model="createTask" @cm-update="refresh" />
   </div>
 </template>

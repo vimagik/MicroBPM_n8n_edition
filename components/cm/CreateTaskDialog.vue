@@ -13,6 +13,7 @@ ru:
 
 <script setup>
 const alert = defineModel()
+const emit = defineEmits(['cmUpdate'])
 
 const { t } = useI18n({
     useScope: 'local'
@@ -53,8 +54,9 @@ async function onSubmit() {
             process: "50558a56-e136-4b47-a187-97241ade0546",
             ...formData
         }
-    }).then(response => {
-        console.log(response)
+    }).then(() => {
+        onReset()
+        emit('cmUpdate')
     })
 } 
 </script>

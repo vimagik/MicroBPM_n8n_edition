@@ -16,7 +16,7 @@ export default defineNuxtConfig({
       },
       n8n: {
         jwt: "0fc0879bc76e3c98bf37d15516b21",
-        url: "http://localhost:5678/webhook-test"
+        url: "http://localhost:5678/webhook"
       }
     }
   },

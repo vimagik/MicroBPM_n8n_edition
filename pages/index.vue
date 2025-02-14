@@ -8,12 +8,9 @@ ru:
 </i18n>
 
 <script setup>
-const { t, locale } = useI18n({
+const { t } = useI18n({
     useScope: 'local'
 })
-
-const { formatData } = useFormatData()
-
 
 const filterStr = ref('')
 const curPage = ref(1)
@@ -53,22 +50,7 @@ const { data: tasksData, refresh } = await useProtectedFetch('/items/task',
                         <div class="text-h6">{{ t('activeTasks') }}</div>
                     </q-card-section>
                     <q-card-section class="q-pt-none">
-                        <q-list>
-                            <q-item v-for="task in tasksData.data" :key="task.id" clickable v-ripple
-                                class="q-mb-sm bg-white" active-class="cyan-5">
-                                <q-item-section>
-                                    <div class="q-my-sm q-ml-sm">
-                                        <div class="text-body1">{{ task.name }}
-                                        </div>
-                                        <div class="text-caption">{{ locale == 'en-US' ? task.process.name_en :
-                                            task.process.name }}</div>
-                                    </div>
-                                </q-item-section>
-                                <q-item-section v-if="task.due_date" class="a-ml-sm" side>
-                                    <q-btn outline rounded color="red" :label="formatData(task.due_date)" />
-                                </q-item-section>
-                            </q-item>
-                        </q-list>
+                        <app-tasks :task-data="tasksData.data" />
                     </q-card-section>
                     <q-card-section v-if="tasksData">
                         <div class="flex flex-center">
