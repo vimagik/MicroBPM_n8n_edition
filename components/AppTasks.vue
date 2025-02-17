@@ -11,6 +11,7 @@ const router = useRouter()
 
 function openTask(task) {
     store.setContext(task.context)
+    store.setTaskId(task.id)
     router.push(`${task.process.url}/${task.type}`)
 }
 </script>

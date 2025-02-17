@@ -23,7 +23,12 @@ const { data: tasksData, refresh } = await useProtectedFetch('/items/task',
             limit: 4,
             meta: 'filter_count',
             search: filterStr,
-            fields: '*,process.*'
+            fields: '*,process.*',
+            filter: {
+                "status": {
+                    "_neq": 2
+                }
+            }
         }
     }
 )
@@ -49,7 +54,7 @@ const { data: tasksData, refresh } = await useProtectedFetch('/items/task',
                     <q-card-section>
                         <div class="text-h6">{{ t('activeTasks') }}</div>
                     </q-card-section>
-                    <q-card-section class="q-pt-none">
+                    <q-card-section v-if="tasksData" class="q-pt-none">
                         <app-tasks :task-data="tasksData.data" />
                     </q-card-section>
                     <q-card-section v-if="tasksData">
