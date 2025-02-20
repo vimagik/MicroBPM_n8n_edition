@@ -2,9 +2,11 @@
 en-US:
   tasks: 'Tasks'
   activeTasks: 'Active tasks'
+  search: 'Search'
 ru:
   tasks: 'Задачи'
   activeTasks: 'Активные задачи'
+  search: 'Поиск'
 </i18n>
 
 <script setup>
@@ -47,7 +49,8 @@ const { data: tasksData, refresh } = await useProtectedFetch('/items/task',
                     </div>
                     <q-space />
                     <div class="col-4">
-                        <q-input v-model="filterStr" @update:model-value="refresh" rounded standout label="Поиск" />
+                        <q-input v-model="filterStr" @update:model-value="refresh" rounded standout
+                            :label="t('search')" />
                     </div>
                 </div>
                 <q-card class="bg-grey-4 q-mt-md">
