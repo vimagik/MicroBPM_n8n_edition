@@ -1,0 +1,334 @@
+{
+  "name": "CM-2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "9a8caf48-8c0a-4c33-86bd-f9af51a99965",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "76614dd3-c7a1-49bc-acd6-7c030894af0e",
+      "name": "Webhook",
+      "webhookId": "9a8caf48-8c0a-4c33-86bd-f9af51a99965",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1IEeS9i4qyi1LujZ",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "id": "={{ $('Webhook').first().json.body.taskId }}",
+        "collection": "task",
+        "data": "{\n  \"status\": 2\n}"
+      },
+      "type": "n8n-nodes-directus.directus",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        20
+      ],
+      "id": "face4a12-c922-4d21-8ade-3c2be7f8d5a8",
+      "name": "Завершить задачу",
+      "credentials": {
+        "directusApi": {
+          "id": "fFr7oLTgDyDNqkF1",
+          "name": "Directus Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "id": "={{ $json.body.contextId }}",
+        "collection": "cm",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-directus.directus",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "29dba072-6eda-48be-8264-35c1d353c8d9",
+      "name": "Получаем контекст процесса",
+      "credentials": {
+        "directusApi": {
+          "id": "fFr7oLTgDyDNqkF1",
+          "name": "Directus Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "collection": "user_profile",
+        "additionalFields": {
+          "filter": "={\n\t\"user\": {\n\t\t\"_eq\": \"{{ $json.responsible }}\"\n\t}\n}"
+        }
+      },
+      "type": "n8n-nodes-directus.directus",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "3ec31262-b572-4f0d-9a0d-6bdf2b1e9fa6",
+      "name": "Узнаем телеграмм id инициатора",
+      "credentials": {
+        "directusApi": {
+          "id": "fFr7oLTgDyDNqkF1",
+          "name": "Directus Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json[0].telegram }}",
+        "text": "=Задача \"{{ $('Получаем контекст процесса').item.json.name }}\" запланирована",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        920,
+        -100
+      ],
+      "id": "e080c355-fc2d-4a6c-a27c-eb1a9e617d86",
+      "name": "Telegram",
+      "credentials": {
+        "telegramApi": {
+          "id": "xfaXFNubzY7KTUkV",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "collection": "task",
+        "data": "={\n  \"name\": \"Выполнить {{ $('Получаем контекст процесса').first().json.name }}\",\n  \"responsible\": \"{{ $('Получаем контекст процесса').first().json.responsible }}\",\n  \"process\": \"{{ $('Получаем контекст процесса').first().json.process }}\",\n  \"type\": \"complete-task\",\n  \"context\": \"{{ $('Получаем контекст процесса').first().json.id }}\",\n  \"due_date\": \"{{ $('Webhook').first().json.body.dueDate }}\"\n}"
+      },
+      "type": "n8n-nodes-directus.directus",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        20
+      ],
+      "id": "dc880f53-bab7-4b91-9a21-85af3a31afd3",
+      "name": "Создаем задачу на планирование",
+      "credentials": {
+        "directusApi": {
+          "id": "fFr7oLTgDyDNqkF1",
+          "name": "Directus Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e330316b-015d-46ef-a0b1-18859acea3d9",
+              "leftValue": "={{ $json }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "array",
+                "operation": "lengthGt",
+                "rightType": "number"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "3c6f707f-d8b2-496a-b1ff-0be4ae7565d1",
+      "name": "Найден профиль?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "id": "={{ $('Webhook').item.json.body.contextId }}",
+        "collection": "cm",
+        "data": "={\n  \"due_date\": \"{{ $('Webhook').item.json.body.dueDate }}\" \n} "
+      },
+      "type": "n8n-nodes-directus.directus",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        20
+      ],
+      "id": "fd843eab-06a2-4cc5-9078-97a5cea758de",
+      "name": "Directus",
+      "credentials": {
+        "directusApi": {
+          "id": "fFr7oLTgDyDNqkF1",
+          "name": "Directus Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "localhost:5678",
+            "connection": "keep-alive",
+            "content-length": "95",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "authorization": "Bearer 0fc0879bc76e3c98bf37d15516b21",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 YaBrowser/25.2.0.0 Safari/537.36",
+            "accept": "application/json",
+            "sec-ch-ua": "\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"YaBrowser\";v=\"25.2\", \"Yowser\";v=\"2.5\"",
+            "content-type": "application/json",
+            "sec-ch-ua-mobile": "?0",
+            "origin": "http://localhost:3000",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://localhost:3000/",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru,en;q=0.9"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "contextId": "17",
+            "taskId": "3972edeb-b5a2-47f3-8b89-006a5eca2702",
+            "dueDate": "2025-02-04 23:00"
+          },
+          "webhookUrl": "http://localhost:5678/webhook-test/9a8caf48-8c0a-4c33-86bd-f9af51a99965",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Получаем контекст процесса",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Получаем контекст процесса": {
+      "main": [
+        [
+          {
+            "node": "Узнаем телеграмм id инициатора",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Узнаем телеграмм id инициатора": {
+      "main": [
+        [
+          {
+            "node": "Найден профиль?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        [
+          {
+            "node": "Создаем задачу на планирование",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Найден профиль?": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Создаем задачу на планирование",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Создаем задачу на планирование": {
+      "main": [
+        [
+          {
+            "node": "Directus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Directus": {
+      "main": [
+        [
+          {
+            "node": "Завершить задачу",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a08f3ba6-7c0a-434e-8435-eafc7cf7086e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "58eacf1089ce742307965fe1febaf68c91c2f0730b23d78218be2a03edf268b8"
+  },
+  "id": "18WVfs2aAxYXCGE3",
+  "tags": [
+    {
+      "createdAt": "2025-02-14T11:31:39.485Z",
+      "updatedAt": "2025-02-14T11:31:39.485Z",
+      "id": "ZBv0ATNK3DIfV7Yg",
+      "name": "cm"
+    }
+  ]
+}

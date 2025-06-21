@@ -1,0 +1,243 @@
+{
+  "name": "CM-1",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "46b0b3a0-c468-42f8-895c-48f273269491",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "049ef7ca-d649-423f-b704-5c57fd826f53",
+      "name": "Webhook",
+      "webhookId": "46b0b3a0-c468-42f8-895c-48f273269491",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1IEeS9i4qyi1LujZ",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "collection": "cm",
+        "data": "={\n  \"name\": \"{{ $json.body.name }}\",\n  \"desc\": \"{{ $json.body.desc }}\",\n  \"responsible\": \"{{ $json.body.responsible }}\"\n}"
+      },
+      "type": "n8n-nodes-directus.directus",
+      "typeVersion": 1,
+      "position": [
+        540,
+        -160
+      ],
+      "id": "aa21b80a-07c3-4d97-96c7-e664a256ceea",
+      "name": "Создаем контекст процесса",
+      "credentials": {
+        "directusApi": {
+          "id": "fFr7oLTgDyDNqkF1",
+          "name": "Directus Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e90bfd99-a1b9-4189-a630-2e319efb1202",
+              "leftValue": "={{ $json.body.due_date }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "5130067e-84e2-41e5-aba8-dc8966d30122",
+      "name": "Дата не указана?"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "collection": "cm",
+        "data": "={\n  \"name\": \"{{ $json.body.name }}\",\n  \"desc\": \"{{ $json.body.desc }}\",\n  \"responsible\": \"{{ $json.body.responsible }}\",\n  \"due_date\": \"{{ $json.body.due_date }}\"\n}"
+      },
+      "type": "n8n-nodes-directus.directus",
+      "typeVersion": 1,
+      "position": [
+        540,
+        80
+      ],
+      "id": "bbde2e5d-5dab-4539-89f7-2692c2c69489",
+      "name": "Создаем контекст с датой",
+      "credentials": {
+        "directusApi": {
+          "id": "fFr7oLTgDyDNqkF1",
+          "name": "Directus Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let nowDate = new Date()\nnowDate.setDate(nowDate.getDate()+1)\nnowDate.setHours(nowDate.getHours()+3)\nconst nowStr = nowDate.toISOString()\n\nreturn {\n  nowStr\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        -160
+      ],
+      "id": "f49a9b35-cbfc-4bcf-ae17-d42d40fc94ae",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "collection": "task",
+        "data": "={\n  \"name\": \"Запланировать {{ $('Webhook').item.json.body.name }}\",\n  \"responsible\": \"{{ $('Webhook').item.json.body.responsible }}\",\n  \"process\": \"{{ $('Webhook').item.json.body.process }}\",\n  \"type\": \"plan-task\",\n  \"context\": \"{{ $('Создаем контекст процесса').item.json.id }}\",\n  \"due_date\": \"{{ $json.nowStr }}\"\n}"
+      },
+      "type": "n8n-nodes-directus.directus",
+      "typeVersion": 1,
+      "position": [
+        980,
+        -160
+      ],
+      "id": "25c249b9-1273-4238-a59e-804da447899a",
+      "name": "Создаем задачу на планирование",
+      "credentials": {
+        "directusApi": {
+          "id": "fFr7oLTgDyDNqkF1",
+          "name": "Directus Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "collection": "task",
+        "data": "={\n  \"name\": \"Запланировать {{ $('Webhook').item.json.body.name }}\",\n  \"responsible\": \"{{ $('Webhook').item.json.body.responsible }}\",\n  \"process\": \"{{ $('Webhook').item.json.body.process }}\",\n  \"type\": \"complete-task\",\n  \"context\": \"{{ $json.id }}\",\n  \"due_date\": \"{{ $json.due_date }}\"\n}"
+      },
+      "type": "n8n-nodes-directus.directus",
+      "typeVersion": 1,
+      "position": [
+        760,
+        80
+      ],
+      "id": "090669d6-dae8-47ae-a810-31c7ceb31e83",
+      "name": "Создаем задачу на выполнение",
+      "credentials": {
+        "directusApi": {
+          "id": "fFr7oLTgDyDNqkF1",
+          "name": "Directus Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Дата не указана?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Дата не указана?": {
+      "main": [
+        [
+          {
+            "node": "Создаем контекст процесса",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Создаем контекст с датой",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Создаем контекст процесса": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Создаем задачу на планирование",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Создаем контекст с датой": {
+      "main": [
+        [
+          {
+            "node": "Создаем задачу на выполнение",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2ab7f36b-6595-4825-aca4-9bde00924b8a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "58eacf1089ce742307965fe1febaf68c91c2f0730b23d78218be2a03edf268b8"
+  },
+  "id": "BhIkTcFHrtNbmy9Q",
+  "tags": [
+    {
+      "createdAt": "2025-02-14T11:31:39.485Z",
+      "updatedAt": "2025-02-14T11:31:39.485Z",
+      "id": "ZBv0ATNK3DIfV7Yg",
+      "name": "cm"
+    }
+  ]
+}
