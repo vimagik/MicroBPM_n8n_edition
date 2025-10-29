@@ -2,6 +2,14 @@
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
+Перенос:
+
+1. Разворачиваем систему
+2. Мигригуем схему в Directus
+3. Импортируем данные в Directus
+4. Мигрируем модели процесса в N8N
+5. Настраиваем доступы из N8N в Directus
+
 ## Setup
 
 Make sure to install dependencies:
