@@ -63,7 +63,7 @@ const { data: tasksData, refresh } = await useProtectedFetch('/items/task',
                     <q-card-section v-if="tasksData">
                         <div class="flex flex-center">
                             <q-pagination v-model="curPage" @update:model-value="refresh" direction-links
-                                :max="tasksData.meta.filter_count / 4 + 1" />
+                                :max="Math.ceil(tasksData.meta.filter_count / 4)" />
                         </div>
                     </q-card-section>
                 </q-card>
