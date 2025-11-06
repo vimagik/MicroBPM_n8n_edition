@@ -58,7 +58,8 @@ const { data: tasksData, refresh } = await useProtectedFetch('/items/task',
                         <div class="text-h6">{{ t('activeTasks') }}</div>
                     </q-card-section>
                     <q-card-section v-if="tasksData" class="q-pt-none">
-                        <app-tasks :task-data="tasksData.data" />
+                        <p v-if="tasksData.meta.filter_count == 0">Все задачи на сегодня выполнены</p>
+                        <app-tasks v-else :task-data="tasksData.data" />
                     </q-card-section>
                     <q-card-section v-if="tasksData">
                         <div class="flex flex-center">
