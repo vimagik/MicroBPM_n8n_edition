@@ -1,0 +1,6 @@
+http://n8n:5678/webhook/{{$trigger.body.workflow}}
+
+{
+ "main" : {{ $trigger.body }},
+ "user" : "{{ $accountability.user }}" 
+}

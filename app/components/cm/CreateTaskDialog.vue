@@ -47,11 +47,11 @@ function onReset() {
 const store = useAppStore()
 
 async function onSubmit() {
-    await useProtectedFetchN8N('/46b0b3a0-c468-42f8-895c-48f273269491', {
+    await useProtectedFetch('/flows/trigger/089d6508-34aa-4da3-9b47-dba820722bfc', {
         method: 'POST',
         body: {
-            jwt: store.accessToken,
-            process: "50558a56-e136-4b47-a187-97241ade0546",
+            workflow: '46b0b3a0-c468-42f8-895c-48f273269491',
+            process: '50558a56-e136-4b47-a187-97241ade0546',
             ...formData
         }
     }).then(() => {
